@@ -596,6 +596,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 		   {
 			   if (BotPrediction[i]->Count > 0)
 			   {
+				   //Check
 				   return false;
 			   }
 		   }
@@ -626,7 +627,6 @@ void BotTurn()
 	{
 		if (!isBotPredictionEmpty())
 		{
-			//Видалити зайві елементи
 			if (side == 0 || side == 1)
 			{
 					BotPrediction[2]->Clear();
