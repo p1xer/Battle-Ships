@@ -596,7 +596,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 		   {
 			   if (BotPrediction[i]->Count > 0)
 			   {
-				   //Check
+				   //Check 2
 				   return false;
 			   }
 		   }
