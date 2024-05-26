@@ -382,12 +382,38 @@ Coords GameArea::RandomShoot() //Постріл у випадкову кліти
 {
 	int x;
 	int y;
+	bool coordsOk;
 	do
 	{
+		coordsOk = true;
 		x = rand() % 10;
 		y = rand() % 10;
-	} //while (area[x][y] == 3 || area[x][y] == -1 || area[x][y] == 2);
-	while (area[x][y] !=1);
+		//	if(area[x][y] != 3)
+		//	{
+		//		int i = -1;
+		//		while (i < 2 && coordsOk == true)
+		//		{
+		//			int j = -1;
+		//			while (j < 2 && coordsOk == true)
+		//			{
+		//				if((x+i <= 9 && x+i >= 0) && (y+j <= 9 && y+j >= 0))
+		//				{
+		//					if (area[x + i][y + j] == 2 || area[x + i][y + j] == -1)
+		//					{
+		//						coordsOk = false;
+		//					}
+		//				}
+		//				j++;
+		//			}
+		//			i++;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		coordsOk = false;
+		//	}
+		//} while (coordsOk == false);
+	} while (area[x][y] != 1);
 	
 	Shoot(x, y);
 

@@ -616,6 +616,12 @@ void BotTurn()
 		//Обрати БотКордс з лісту. Зробити постріл ща координатами
 		do {
 			side = rand() % 4;
+			/*
+			0 - Вниз
+			1 - Вверх
+			2 - Праворуч
+			3 - Ліворуч
+			*/
 		} while (BotPrediction[side]->Count == 0);
 		List <Coords>^ sidecoords = BotPrediction[side];
 		BotCoords.y = sidecoords[0].y;
@@ -636,7 +642,10 @@ void BotTurn()
 				{
 					if (BotPrediction[1]->Count > 0)
 					{
-						BotPrediction[1]->RemoveAt(BotPrediction[1]->Count - 1);
+						Coords tempcoords = BotCoords;
+						tempcoords.y -= 4;
+						BotPrediction[1]->Remove(tempcoords);
+						//BotPrediction[1]->RemoveAt(BotPrediction[1]->Count - 1);
 					}
 					BotPrediction[side]->RemoveAt(0);
 				}
@@ -644,7 +653,10 @@ void BotTurn()
 				{
 					if (BotPrediction[0]->Count > 0)
 					{
-						BotPrediction[0]->RemoveAt(BotPrediction[0]->Count - 1);
+						Coords tempcoords = BotCoords;
+						tempcoords.y += 4;
+						BotPrediction[0]->Remove(tempcoords);
+						//BotPrediction[0]->RemoveAt(BotPrediction[0]->Count - 1);
 					}
 					BotPrediction[side]->RemoveAt(0);
 				}
@@ -656,16 +668,22 @@ void BotTurn()
 				if (side == 2)
 				{
 					BotPrediction[side]->RemoveAt(0);
-					if(BotPrediction[3]->Count > 0)
+					if(BotPrediction[3]->Count == 0)
 					{
-						BotPrediction[3]->RemoveAt(BotPrediction[3]->Count - 1);
+						Coords tempcoords = BotCoords;
+						tempcoords.x -= 4;
+						BotPrediction[3]->Remove(tempcoords);
+						//BotPrediction[3]->RemoveAt(BotPrediction[3]->Count - 1);
 					}
 				}
 				else
 				{
 					if(BotPrediction[2]->Count>0)
 					{
-						BotPrediction[2]->RemoveAt(BotPrediction[2]->Count - 1);
+						Coords tempcoords = BotCoords;
+						tempcoords.x += 4;
+						BotPrediction[2]->Remove(tempcoords);
+						//BotPrediction[2]->RemoveAt(BotPrediction[2]->Count - 1);
 					}
 					BotPrediction[side]->RemoveAt(0);
 				}
@@ -723,7 +741,7 @@ void BotTurn()
 			return;
 		}
 
-		if (FArea->area[BotCoords.x][BotCoords.y] == -1)
+			if (FArea->area[BotCoords.x][BotCoords.y] == -1)
 		{
 			GridUser->Enabled = true;
 			GridBot->Enabled = false;
