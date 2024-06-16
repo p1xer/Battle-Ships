@@ -95,12 +95,16 @@ namespace Form {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn8;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn9;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn10;
+	private: System::Windows::Forms::Timer^ timerShot;
+	private: System::Windows::Forms::Timer^ timerClick;
+
+	private: System::ComponentModel::IContainer^ components;
 
 	private:
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -109,6 +113,7 @@ namespace Form {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
@@ -140,6 +145,8 @@ namespace Form {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->timerShot = (gcnew System::Windows::Forms::Timer(this->components));
+			this->timerClick = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->GridUser))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->GridBot))->BeginInit();
 			this->SuspendLayout();
@@ -438,6 +445,16 @@ namespace Form {
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &CBattle::button4_Click);
 			// 
+			// timerShot
+			// 
+			this->timerShot->Interval = 2000;
+			this->timerShot->Tick += gcnew System::EventHandler(this, &CBattle::timerShot_Tick);
+			// 
+			// timerClick
+			// 
+			this->timerClick->Interval = 300;
+			this->timerClick->Tick += gcnew System::EventHandler(this, &CBattle::timerClick_Tick);
+			// 
 			// CBattle
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -529,36 +546,8 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 		MessageBox::Show("Correct placement of ship");
 	}
 }
-private: System::Void GridUser_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
-	if (!GameStarted)
-	{
-		if (FArea->area[e->RowIndex][e->ColumnIndex] == 0)
-		{
-			FArea->area[e->RowIndex][e->ColumnIndex] = 1;
-		}
-		else
-		{
-			FArea->area[e->RowIndex][e->ColumnIndex] = 0;
-		}
-		AreaToGrid(GridUser, FArea);
-	}
-	else
-	{
-		if (FArea->area[e->RowIndex][e->ColumnIndex] == 1)
-		{
-			FArea->Shoot(e->RowIndex,e->ColumnIndex);
-			AreaToGrid(GridUser, FArea);
-			if (FArea->LoseCheck())
-			{
-				label2->BackColor = Color::Green;
-				GameStarted = false;
-				button3->Enabled = true;
-			}
-			GridUser->Enabled = false;
-			GridBot->Enabled = true;
-		}
-	}
-}
+
+
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 	//if (FArea->PlacementCheck())
 	{
@@ -806,40 +795,79 @@ private: System::Void GridBot_CellMouseClick(System::Object^ sender, System::Win
 				//shoot = 3
 				//Coords BotCoords;
 
-				do
-				{
-					BotTurn();
-					/*BotCoords = FArea->RandomShoot();
-					if (FArea->area[BotCoords.x][BotCoords.y] == 3)
-					{
-						PlayerTurn = true;
-					}
-					AreaToGrid(GridUser, FArea);
+				//do
+				//{
+				//	BotTurn();
+				//	/*BotCoords = FArea->RandomShoot();
+				//	if (FArea->area[BotCoords.x][BotCoords.y] == 3)
+				//	{
+				//		PlayerTurn = true;
+				//	}
+				//	AreaToGrid(GridUser, FArea);
 
-					if (FArea->LoseCheck())
-					{
-						label2->BackColor = Color::Green;
-						GameStarted = false;
-						button3->Enabled = true;
-						return;
-					}
+				//	if (FArea->LoseCheck())
+				//	{
+				//		label2->BackColor = Color::Green;
+				//		GameStarted = false;
+				//		button3->Enabled = true;
+				//		return;
+				//	}
 
-					if (FArea->area[BotCoords.x][BotCoords.y] == -1)
-					{
-						GridUser->Enabled = true;
-						GridBot->Enabled = false;
-						MessageBox::Show("Enemy shot the mine. Choose your ship");
-						PlayerTurn = true;
-						return;
-					}*/
-				} while (!PlayerTurn);
+				//	if (FArea->area[BotCoords.x][BotCoords.y] == -1)
+				//	{
+				//		GridUser->Enabled = true;
+				//		GridBot->Enabled = false;
+				//		MessageBox::Show("Enemy shot the mine. Choose your ship");
+				//		PlayerTurn = true;
+				//		return;
+				//	}*/
+				//} while (!PlayerTurn);
+
+				timerShot->Start();
 
 			}
 		}
 	}
 }
 
+	   //DataGridViewCellEventArgs^ clickInfo;
+	   DataGridViewCellMouseEventArgs^ clickInfo;
+private: System::Void GridUser_CellMouseClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
+	clickInfo = e;
+	timerClick->Start();
+	/*if (!GameStarted)
+	{
+		if (FArea->area[e->RowIndex][e->ColumnIndex] == 0)
+		{
+			FArea->area[e->RowIndex][e->ColumnIndex] = 1;
+		}
+		else
+		{
+			FArea->area[e->RowIndex][e->ColumnIndex] = 0;
+		}
+		AreaToGrid(GridUser, FArea);
+	}
+	else
+	{
+		if (FArea->area[e->RowIndex][e->ColumnIndex] == 1)
+		{
+			FArea->Shoot(e->RowIndex,e->ColumnIndex);
+			AreaToGrid(GridUser, FArea);
+			if (FArea->LoseCheck())
+			{
+				label2->BackColor = Color::Green;
+				GameStarted = false;
+				button3->Enabled = true;
+			}
+			GridUser->Enabled = false;
+			GridBot->Enabled = true;
+		}
+	}*/
+}
+
 private: System::Void GridUser_CellMouseDoubleClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellMouseEventArgs^ e) {
+	timerClick->Stop();
+
 	if (!GameStarted)
 	{
 		if (FArea->area[e->RowIndex][e->ColumnIndex] == 0)
@@ -852,6 +880,48 @@ private: System::Void GridUser_CellMouseDoubleClick(System::Object^ sender, Syst
 		}
 		AreaToGrid(GridUser, FArea);
 	}
+}
+private: System::Void timerShot_Tick(System::Object^ sender, System::EventArgs^ e) {
+	BotTurn();
+	if (PlayerTurn)
+		timerShot->Stop();
+}
+private: System::Void timerClick_Tick(System::Object^ sender, System::EventArgs^ e) {
+	timerClick->Stop(); // Останавливаем таймер
+	// Ваша логика для одиночного щелчка
+	if (clickInfo != nullptr)
+	{
+		//MessageBox::Show("Single Clicked Cell: Row " + lastCellClick->RowIndex + ", Column " + lastCellClick->ColumnIndex);
+		if (!GameStarted)
+		{
+			if (FArea->area[clickInfo->RowIndex][clickInfo->ColumnIndex] == 0)
+			{
+				FArea->area[clickInfo->RowIndex][clickInfo->ColumnIndex] = 1;
+			}
+			else
+			{
+				FArea->area[clickInfo->RowIndex][clickInfo->ColumnIndex] = 0;
+			}
+			AreaToGrid(GridUser, FArea);
+		}
+		else
+		{
+			if (FArea->area[clickInfo->RowIndex][clickInfo->ColumnIndex] == 1)
+			{
+				FArea->Shoot(clickInfo->RowIndex, clickInfo->ColumnIndex);
+				AreaToGrid(GridUser, FArea);
+				if (FArea->LoseCheck())
+				{
+					label2->BackColor = Color::Green;
+					GameStarted = false;
+					button3->Enabled = true;
+				}
+				GridUser->Enabled = false;
+				GridBot->Enabled = true;
+			}
+		}
+	}
+
 }
 };
 }
