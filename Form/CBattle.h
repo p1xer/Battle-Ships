@@ -887,11 +887,11 @@ private: System::Void timerShot_Tick(System::Object^ sender, System::EventArgs^ 
 		timerShot->Stop();
 }
 private: System::Void timerClick_Tick(System::Object^ sender, System::EventArgs^ e) {
-	timerClick->Stop(); // Останавливаем таймер
-	// Ваша логика для одиночного щелчка
+	timerClick->Stop(); 
+	
 	if (clickInfo != nullptr)
 	{
-		//MessageBox::Show("Single Clicked Cell: Row " + lastCellClick->RowIndex + ", Column " + lastCellClick->ColumnIndex);
+		
 		if (!GameStarted)
 		{
 			if (FArea->area[clickInfo->RowIndex][clickInfo->ColumnIndex] == 0)
